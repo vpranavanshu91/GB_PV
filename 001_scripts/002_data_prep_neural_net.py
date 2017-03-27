@@ -99,6 +99,12 @@ def build_input_data(q1, q2, labels, vocabulary):
 
 #%%
 train =  pd.read_csv('train-2.csv')
+holdout = train.sample(0.30* len(train))
+holdout.to_csv('GB_PV/001_data/holdout.csv')
+train = train[~train.index.isin(holdout.index)]
+train.to_csv('GB_PV/001_data/train.csv')
+#%%
+
 q1 = Parallel(n_jobs=4)(delayed(clean_str)(str(q)) for q in train.question1)
 q2 = Parallel(n_jobs=4)(delayed(clean_str)(str(q)) for q in train.question2)
 all_questions = np.vstack([q1,q2]).ravel()
